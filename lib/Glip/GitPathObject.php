@@ -20,89 +20,77 @@
 
 namespace Glip;
 
-abstract class GitPathObject extends GitObject
-{
-  protected
-    $mode = null; // the mode of this object
+abstract class GitPathObject extends GitObject {
+    protected
+        $mode = null; // the mode of this object
 
-  public function getMode()
-  {
-    return $this->mode;
-  }
-
-  public function setMode($mode)
-  {
-    if ($this->isReadOnly())
-    {
-      throw new \Exception('cannot set mode on a locked object');
+    public function getMode() {
+        return $this->mode;
     }
-    $this->mode = $mode;
-  }
 
-  /**
-   * Constructor, sets mode of this object
-   *
-   * @return void
-   * @author The Young Shepherd
-   **/
-  public function __construct(Git $git, $sha = null, $mode = null)
-  {
-    if (!is_null($mode))
-    {
-      $this->mode = $mode;
-    }
-    parent::__construct($git, $sha);
-  }
-
-  /**
-   * Gets all commits in which this object changed
-   *
-   * @param $commitTip The commit from where to start searching
-   * @return array of GitCommit
-   */
-  public function getHistory(GitCommit $commitTip)
-  {
-    $r = array();
-    $commits = $commitTip->getHistory();
-    $path = $commitTip->getPath($this);
-    $last = null;
-    foreach ($commits as $commit)
-    {
-      $sha = (string)$commit[$path];
-      foreach ($commit->parents as $parent)
-      {
-        if ($sha!==(string)$parent[$path])
-        {
-          $r[] = $commit;
-          break;
+    public function setMode($mode) {
+        if ($this->isReadOnly()) {
+            throw new \Exception('cannot set mode on a locked object');
         }
-      }
+        $this->mode = $mode;
     }
-    return $r;
-  }
 
-  /**
-   * getCommitForLastModification returns the last commit where this object is modified
-   *
-   * @return GitCommit
-   **/
-  public function getCommitForLastModification($from)
-  {
-    $commit = $this->git->getCommitObject($from);
-    $path = $this->getPath($commit);
-
-    $commits = $commit->getHistory();
-    $commits = array_reverse($commits);
-    $r = NULL;
-    $lastblob = $this->getName();
-    foreach ($commits as $commit)
-    {
-        $blobname = $commit[$path];
-        if ($blobname != $lastblob)
-            break;
-        $r = $commit->committer->time;
+    /**
+     * Constructor, sets mode of this object
+     *
+     * @return void
+     * @author The Young Shepherd
+     **/
+    public function __construct(Git $git, $sha = null, $mode = null) {
+        if (!is_null($mode)) {
+            $this->mode = $mode;
+        }
+        parent::__construct($git, $sha);
     }
-    assert($r !== NULL); /* something is seriously wrong if this happens */
-    return $r;
-  }
+
+    /**
+     * Gets all commits in which this object changed
+     *
+     * @param $commitTip The commit from where to start searching
+     * @return array of GitCommit
+     */
+    public function getHistory(GitCommit $commitTip) {
+        $r = array();
+        $commits = $commitTip->getHistory();
+        $path = $commitTip->getPath($this);
+        $last = null;
+        foreach ($commits as $commit) {
+            $sha = (string)$commit[$path];
+            foreach ($commit->parents as $parent) {
+                if ($sha!==(string)$parent[$path]) {
+                    $r[] = $commit;
+                    break;
+                }
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * getCommitForLastModification returns the last commit where this object is modified
+     *
+     * @return GitCommit
+     **/
+    public function getCommitForLastModification($from) {
+        $commit = $this->git->getCommitObject($from);
+        $path = $this->getPath($commit);
+
+        $commits = $commit->getHistory();
+        $commits = array_reverse($commits);
+        $r = NULL;
+        $lastblob = $this->getName();
+        foreach ($commits as $commit) {
+            $blobname = $commit[$path];
+            if ($blobname != $lastblob)
+                break;
+            $r = $commit->committer->time;
+        }
+        assert($r !== NULL); /* something is seriously wrong if this happens */
+        return $r;
+    }
 }

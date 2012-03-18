@@ -20,34 +20,29 @@
 
 namespace Glip;
 
-class GitBlob extends GitPathObject
-{
-  protected
-    $data = array(
-      'data' => null         // The data contained in this blob
-      ),
-    $mode = 0100640;         // The default mode for a BLOB
+class GitBlob extends GitPathObject {
+    protected
+        $data = array(
+        'data' => null         // The data contained in this blob
+        ),
+        $mode = 0100640;         // The default mode for a BLOB
 
-  public function __construct(Git $git, $sha = null, $mode = null, $data = null)
-  {
-    parent::__construct($git, $sha, $mode);
-    if (!is_null($data))
-    {
-      $this->data['data'] = $data;
+    public function __construct(Git $git, $sha = null, $mode = null, $data = null) {
+        parent::__construct($git, $sha, $mode);
+        if (!is_null($data)) {
+            $this->data['data'] = $data;
+        }
     }
-  }
 
-  public function unserialize($data)
-  {
-  	$this->data['data'] = $data;
-  }
+    public function unserialize($data) {
+        $this->data['data'] = $data;
+    }
 
-  protected function _serialize()
-  {
-  	return $this->data['data'];
-  }
+    protected function _serialize() {
+        return $this->data['data'];
+    }
 
-  public function getTypeName() {
-    return 'blob';
-  }
+    public function getTypeName() {
+        return 'blob';
+    }
 }
