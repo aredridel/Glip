@@ -262,6 +262,7 @@ abstract class GitObject implements \Serializable
 
   private function mkdirp($dir, $mode) {
     $parts = explode('/', $dir);
+    $path = '';
     while ($part = array_shift($parts)) {
         $path .= $part . '/';
         if (file_exists($path) and !is_dir($path)) {
