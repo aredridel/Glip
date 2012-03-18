@@ -96,7 +96,11 @@ class Git implements \ArrayAccess
    **/
   public function __construct($dir, &$stashSource = null, $stashKey = 'git_stash')
   {
-    $this->dir = $dir.'/.git';
+    if ($this->is_bare($dir)) {
+      $this->dir = $dir;
+    } else {
+      $this->dir = $dir.'/.git';
+    }
 
     if (is_array($stashSource))
     {
@@ -116,6 +120,10 @@ class Git implements \ArrayAccess
         while (($entry = readdir($dh)) !== FALSE)
         if (preg_match('#^pack-([0-9a-fA-F]{40})\.idx$#', $entry, $m))
             $this->packs[] = new SHA($m[1]);
+  }
+
+  private function is_bare($dir) {
+    return is_dir($dir."/objects") and is_dir($dir."/refs") and file_exists($dir."/HEAD");
   }
 
   /**
