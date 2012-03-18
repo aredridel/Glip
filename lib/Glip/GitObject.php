@@ -167,10 +167,7 @@ abstract class GitObject implements \Serializable
    * @return (string) the type name
    * @author Sjoerd de Jong
    **/
-  public function getTypeName()
-  {
-    return strtolower(substr(get_class($this),3));
-  }
+  abstract public function getTypeName();
 
   /**
    * Get the object's type number

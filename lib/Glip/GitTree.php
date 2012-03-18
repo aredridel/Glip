@@ -384,4 +384,8 @@ class GitTree extends GitPathObject implements \ArrayAccess, \IteratorAggregate,
   {
     return count($this->nodes);
   }
+
+  public function getTypeName() {
+    return 'tree';
+  }
 }

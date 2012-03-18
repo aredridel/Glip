@@ -46,4 +46,8 @@ class GitBlob extends GitPathObject
   {
   	return $this->data['data'];
   }
+
+  public function getTypeName() {
+    return 'blob';
+  }
 }

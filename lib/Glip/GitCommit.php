@@ -294,4 +294,8 @@ class GitCommit extends GitObject implements \ArrayAccess, \IteratorAggregate, \
   {
     return $this->tree->count();
   }
+
+  public function getTypeName() {
+    return 'commit';
+  }
 }
