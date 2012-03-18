@@ -245,7 +245,7 @@ abstract class GitObject implements \Serializable
 
     if (!is_dir(dirname($path)))
     {
-      mkdir(dirname($path), 0770);
+      $this->mkdirp(dirname($path), 0770);
     }
 
     $f = fopen($path, 'ab');
@@ -258,6 +258,21 @@ abstract class GitObject implements \Serializable
 
     $this->exists = true;
     return TRUE;
+  }
+
+  private function mkdirp($dir, $mode) {
+    $parts = explode('/', $dir);
+    while ($part = array_shift($parts)) {
+        $path .= $part . '/';
+        if (file_exists($path) and !is_dir($path)) {
+            throw new Exception("'$path' exists and is not a directory");
+        }
+
+        if (!file_exists($path)) {
+            mkdir($path, $mode);
+        }
+
+    }
   }
 
   /**
